@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーレット</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  #roulette {
+    width: 300px;
+    height: 300px;
+    border: 2px solid black;
+    border-radius: 50%;
+    position: relative;
+    margin: 50px auto;
+    overflow: hidden;
+  }
+  .section {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .section:nth-child(1) { transform: rotate(0deg); background-color: #FF5733; }
+  .section:nth-child(2) { transform: rotate(36deg); background-color: #FFC300; }
+  .section:nth-child(3) { transform: rotate(72deg); background-color: #DAF7A6; }
+  .section:nth-child(4) { transform: rotate(108deg); background-color: #C7EFCF; }
+  .section:nth-child(5) { transform: rotate(144deg); background-color: #A3E4D7; }
+  .section:nth-child(6) { transform: rotate(180deg); background-color: #A3CEF1; }
+  .section:nth-child(7) { transform: rotate(216deg); background-color: #D7BDE2; }
+  .section:nth-child(8) { transform: rotate(252deg); background-color: #F5B7B1; }
+  .section:nth-child(9) { transform: rotate(288deg); background-color: #FF5733; }
+  .section:nth-child(10) { transform: rotate(324deg); background-color: #FFC300; }
+  #arrow {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 15px solid red;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center bottom;
+    transform: translate(-50%, -50%);
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 24px;
+  }
+</style>
+</head>
+<body>
+
+<div id="roulette">
+  <div class="section">1</div>
+  <div class="section">2</div>
+  <div class="section">3</div>
+  <div class="section">4</div>
+  <div class="section">5</div>
+  <div class="section">6</div>
+  <div class="section">7</div>
+  <div class="section">8</div>
+  <div class="section">9</div>
+  <div class="section">10</div>
+  <div id="arrow"></div>
+</div>
+<button onclick="spin()">開始</button>
+<div id="result"></div>
+
+<script>
+  const items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  const roulette = document.getElementById('roulette');
+  const arrow = document.getElementById('arrow');
+  const result = document.getElementById('result');
+
+  function spin() {
+    const randomRotation = Math.floor(Math.random() * 3600) + 7200; // 20回転以上するようにランダムな角度を生成
+    const spinTime = Math.random() * 2000 + 3000; // 3秒から5秒のランダムな停止時間
+    roulette.style.transition = 'transform ' + spinTime + 'ms ease-out'; // ランダムな時間でスピン
+    arrow.style.transform = 'rotate(' + randomRotation + 'deg)'; // 矢印を回転させる
+    setTimeout(() => {
+      const rotation = getArrowRotation();
+      const selectedItemIndex = Math.floor(rotation / 36); // 選択された項目のインデックスを計算
+      const selectedItem = items[selectedItemIndex]; // 選択された項目を取得
+      result.textContent = `選択された項目: ${selectedItem}`; // 結果を表示
+    }, spinTime);
+  }
+
+  function getArrowRotation() {
+    const st = window.getComputedStyle(arrow, null);
+    const tr = st.getPropertyValue("transform");
+    const values = tr.split('(')[1].split(')')[0].split(',');
+    const a = values[0];
+    const b = values[1];
+    const angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+    return angle >= 0 ? angle : angle + 360;
+  }
+</script>
+
+
+<p>呪文<br>
+javascriptで、ルーレットで項目を決定するguiのプログラムを作ってください。10項目で、ルーレットはボタンを回り始め、数秒で停止し、結果の項目を表示してください
+</html>
