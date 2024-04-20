@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roulette GUI</title>
+<style>
+  #roulette {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 2px solid black;
+    position: relative;
+    margin: 20px auto;
+    overflow: hidden;
+  }
+  #arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 150px;
+    background-color: red;
+    transition: transform 5s ease-in-out;
+    z-index: 2;
+  }
+  #startButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  table {
+    margin: 0 auto;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div id="roulette"></div>
+<button id="startButton">開始</button>
+<table>
+  <thead>
+    <tr>
+      <th>色</th>
+      <th>項目名</th>
+    </tr>
+  </thead>
+  <tbody id="resultTableBody"></tbody>
+</table>
+
+<script>
+  const items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  const colors = ["red", "blue", "green", "yellow", "orange", "purple", "cyan", "pink", "brown", "gray"];
+
+  const roulette = document.getElementById('roulette');
+  const arrow = document.createElement('div');
+  arrow.id = 'arrow';
+  roulette.appendChild(arrow);
+
+  const resultTableBody = document.getElementById('resultTableBody');
+
+  document.getElementById('startButton').addEventListener('click', spinRoulette);
+
+  function spinRoulette() {
+    const randomIndex = Math.floor(Math.random() * items.length);
+    const item = items[randomIndex];
+    const color = colors[randomIndex];
+
+    arrow.style.transition = 'none';
+    const rotationDegrees = randomIndex * (360 / items.length) + 360 * 5; // 5 rotations
+    arrow.style.transform = `translateX(-50%) rotate(${rotationDegrees}deg)`;
+
+    setTimeout(() => {
+      arrow.style.transition = 'transform 5s ease-in-out';
+      arrow.style.transform = `translateX(-50%) rotate(${rotationDegrees + 360}deg)`;
+      displayResult(color, item);
+    }, 50);
+  }
+
+  function displayResult(color, item) {
+    resultTableBody.innerHTML = '';
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td style="background-color: ${color};"></td>
+      <td>${item}</td>
+    `;
+    resultTableBody.appendChild(row);
+  }
+</script>
+
+</body>
+</html>
