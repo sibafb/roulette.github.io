@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーレット</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  #roulette {
+    width: 300px;
+    height: 300px;
+    border: 2px solid black;
+    border-radius: 50%;
+    position: relative;
+    margin: 50px auto;
+    overflow: hidden;
+  }
+  .section {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .section:nth-child(1) { transform: rotate(0deg); }
+  .section:nth-child(2) { transform: rotate(45deg); }
+  .section:nth-child(3) { transform: rotate(90deg); }
+  .section:nth-child(4) { transform: rotate(135deg); }
+  .section:nth-child(5) { transform: rotate(180deg); }
+  .section:nth-child(6) { transform: rotate(225deg); }
+  .section:nth-child(7) { transform: rotate(270deg); }
+  .section:nth-child(8) { transform: rotate(315deg); }
+  #arrow {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 15px solid red;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center bottom;
+    animation: spin 10s ease-out forwards;
+  }
+  @keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 24px;
+  }
+</style>
+</head>
+<body>
+
+<div id="roulette">
+  <div class="section">1</div>
+  <div class="section">2</div>
+  <div class="section">3</div>
+  <div class="section">4</div>
+  <div class="section">5</div>
+  <div class="section">6</div>
+  <div class="section">7</div>
+  <div class="section">8</div>
+  <div id="arrow"></div>
+</div>
+<button onclick="stopArrow()">スピン</button>
+<div id="result"></div>
+
+<script>
+  const items = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  const arrow = document.getElementById('arrow');
+  const result = document.getElementById('result');
+
+  function stopArrow() {
+    arrow.style.animation = 'none'; // アニメーションを停止
+    const rotation = getArrowRotation();
+    const selectedItemIndex = Math.floor(rotation / 45); // 選択された項目のインデックスを計算
+    const selectedItem = items[selectedItemIndex]; // 選択された項目を取得
+    result.textContent = `選択された項目: ${selectedItem}`; // 結果を表示
+  }
+
+  function getArrowRotation() {
+    const st = window.getComputedStyle(arrow, null);
+    const tr = st.getPropertyValue("transform");
+    const values = tr.split('(')[1].split(')')[0].split(',');
+    const a = values[0];
+    const b = values[1];
+    const angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+    return angle >= 0 ? angle : angle + 360;
+  }
+</script>
+
+</body>
+</html>
