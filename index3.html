@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roulette</title>
+<style>
+    #roulette {
+        width: 300px;
+        height: 300px;
+        border: 2px solid black;
+        border-radius: 50%;
+        position: relative;
+        margin: 0 auto;
+    }
+    #arrow {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 20px solid black;
+        transition: transform 5s ease-in-out;
+    }
+    #startButton {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+    table {
+        margin: 0 auto;
+    }
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 5px;
+    }
+</style>
+</head>
+<body>
+<div id="roulette"></div>
+<button id="startButton">開始</button>
+<table>
+    <thead>
+        <tr>
+            <th>色</th>
+            <th>項目名</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>赤</td><td>1</td></tr>
+        <tr><td>青</td><td>2</td></tr>
+        <tr><td>緑</td><td>3</td></tr>
+        <tr><td>黄</td><td>4</td></tr>
+        <tr><td>オレンジ</td><td>5</td></tr>
+        <tr><td>紫</td><td>6</td></tr>
+        <tr><td>ピンク</td><td>7</td></tr>
+        <tr><td>茶</td><td>8</td></tr>
+        <tr><td>灰</td><td>9</td></tr>
+        <tr><td>黒</td><td>10</td></tr>
+    </tbody>
+</table>
+
+<script>
+    // 項目名の配列
+    const items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
+    // 開始ボタンとルーレットを取得
+    const startButton = document.getElementById('startButton');
+    const arrow = document.getElementById('arrow');
+
+    // 開始ボタンがクリックされたときの処理
+    startButton.addEventListener('click', () => {
+        // ルーレット回転のアニメーションを追加
+        arrow.style.transition = 'transform 5s ease-in-out';
+        // ランダムな角度を計算
+        const randomAngle = Math.floor(Math.random() * 360);
+        // ルーレットを回転させる
+        arrow.style.transform = `rotate(${randomAngle}deg)`;
+
+        // 5秒後に停止し、結果を表示する
+        setTimeout(() => {
+            // 現在の回転角度を取得
+            const computedStyle = window.getComputedStyle(arrow);
+            const transform = computedStyle.getPropertyValue('transform');
+            // 回転角度を抽出
+            const matrix = transform.match(/^matrix\((.+)\)$/);
+            const matrixValues = matrix ? matrix[1].split(', ') : null;
+            const rotation = matrixValues ? Math.round(Math.atan2(matrixValues[1], matrixValues[0]) * (180/Math.PI)) : 0;
+            // 現在の角度を0～360の範囲に変換
+            let finalAngle = (rotation < 0 ? rotation + 360 : rotation) % 360;
+            // 10分割されたエリアのサイズを計算
+            const segmentSize = 360 / items.length;
+            // 矢印が指している項目を特定
+            const selectedItemIndex = Math.floor(finalAngle / segmentSize);
+            const selectedItem = items[selectedItemIndex];
+            // 結果を表示
+            alert(`選ばれた項目は ${selectedItem} です！`);
+        }, 5000);
+    });
+</script>
+
+<p>呪文<br>
+javascriptで、ルーレットで項目を決定するguiのプログラムを作ってください。<br>
+<br>
+丸いルーレットが表示されています。<br>
+ルーレットは中心から円グラフのように10分割され、色分けされています。<br>
+ルーレットの分割されたエリアごとに項目があり、項目が割り当てられています。<br>
+ルーレットの真ん中には矢印があり、上を向いて静止しています。<br>
+ルーレットの下にボタンがあり、「開始」と書かれています。<br>
+ルーレットの下に表があり、10行の表が表示されていて、2列に分かれています。<br>
+表の1列目にはルーレットの色が表示されていて、項目名が2列めに表示されています。項目名は1","2","3","4","5","6","7","8","9","10"です。<br>
+<br>
+ボタンを押すと、矢印が回転し、5秒前後のランダムな時間でゆっくり停止し、矢印が指し示している停止したエリアに対応している項目名がボタンの下に表示されます。<br>
+<br>
+10分割された項目は配列で管理され、そこに値をハードコード入っています。デフォルトの8つの項目は"1","2","3","4","5","6","7","8","9","10"です。<br></p>
+</body>
+</html>
